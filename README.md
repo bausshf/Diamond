@@ -1,7 +1,7 @@
 # What is Diamond?
 Diamond is a MVC / Template framework written in D, originally closed source for a private hobby project. It has now been rewamped to become a fully open-source project.
 
-# What's does Diamond depend on?
+# What does Diamond depend on?
 Diamond can be used stand-alone without depending on any third-party libraries, other than the standard library Phobos. It has 3 types of usage, websites and webservices, where it's used on-top of vibe.d and as a stand-alone mvc/template library.
 
 # What is the dependency to vibe.d?
