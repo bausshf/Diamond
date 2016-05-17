@@ -1,3 +1,8 @@
+# Note:
+There's an issue with dub atm. going to fix it asap. It won't fetch versions properly for some reason.
+I am not too familiar with dub, so I'm almost positive it's an issue at my end / done by my configurations.
+It should be able to fetch master properly though.
+
 # What is Diamond?
 Diamond is a MVC / Template framework written in D, originally closed source for a private hobby project. It has now been rewamped to become a fully open-source project.
 
