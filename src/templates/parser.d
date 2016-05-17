@@ -91,18 +91,6 @@ auto parseTemplate(string content) {
             curlyBracketCount -= searchSource.count!(c => c == '}');
             squareBracketcount -= searchSource.count!(c => c == ']');
             parenthesisCount -= searchSource.count!(c => c == ')');
-
-            if (curlyBracketCount > 0) {
-              //current._content ~= "HERE ... CURLY";
-            }
-
-            if (squareBracketcount > 0) {
-              //current._content ~= "HERE ... SQ";
-            }
-
-            if (parenthesisCount > 0) {
-              //current._content ~= "HERE ... PARA";
-            }
           }
         }
         else {
@@ -128,16 +116,6 @@ auto parseTemplate(string content) {
       }
 
       if (current.isEnd(currentChar)) {
-        // if (currentChar == '}') {
-        //   curlyBracketCount--;
-        // }
-        // else if (squareBracketcount == ']') {
-        //   squareBracketcount--;
-        // }
-        // else if (parenthesisCount == ')') {
-        //   parenthesisCount--;
-        // }
-
         switch (current.currentGrammar.characterIncludeMode) {
           case CharacterIncludeMode.start:
             current._content = to!string(current.currentGrammar.startCharacter) ~ current.content;
@@ -162,6 +140,7 @@ auto parseTemplate(string content) {
         current = new Part;
       }
       else {
+        // TODO: Simplify this ...
         if (curlyBracketCount && currentChar == '}') {
           curlyBracketCount--;
 
