@@ -22,4 +22,7 @@ Rich and elegant template syntax, natively compiled, views are parsed at compile
 # Is it easy to use Diamond?
 Diamond has been made in a way that it's very easy to use and integrate into projects. It also takes care of all background setup for vibe.d projects, letting you focus on just writing your websites / webservices logic, rather than a huge hassle of setup.
 
+# Is there any syntax guide-lines?
+View the wiki under "Comparison" as it compares the syntax with ASP.NET's razor syntax, as well shows the syntax for Diamond.
+
 More coming soon ...
