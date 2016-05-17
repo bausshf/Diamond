@@ -59,14 +59,11 @@ version (WebServer_Or_WebService) {
     import std.file : readText;
     _serverSettings = deserializeJson!ServerSettings(readText("web-runtime.json"));
 
-    onApplicationStart();
-
-    // server
     auto settings = new HTTPServerSettings;
     settings.port = serverSettings.port;
     settings.bindAddresses = serverSettings.bindAddresses;
     settings.errorPageHandler = (HTTPServerRequest request, HTTPServerResponse response, HTTPServerErrorInfo error) {
-        onHttpError(request, response, error);
+        webSettings.onHttpError(request, response, error);
     };
 
     version (WebServer) {
@@ -86,7 +83,7 @@ version (WebServer_Or_WebService) {
   }
 
   private void handleListen(HTTPServerRequest request, HTTPServerResponse response) {
-    if (!onBeforeRequest(request, response)) {
+    if (!webSettings.onBeforeRequest(request, response)) {
       return;
     }
 
@@ -109,13 +106,13 @@ version (WebServer_Or_WebService) {
       }
 
       handleServerListen(request, response, route);
-      onAfterRequest(request, response);
+      webSettings.onAfterRequest(request, response);
     }
     else version (WebService) {
       import diamond.service;
 
       handleServiceListen(request, response, route);
-      onAfterRequest(request, response);
+      webSettings.onAfterRequest(request, response);
     }
   }
 }
