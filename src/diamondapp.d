@@ -20,8 +20,6 @@ version (WebServer_Or_WebService) {
       import diamond.views;
   }
 
-  import web;
-
   private enum webBuildJson = import("web-build.json");
 
   version (WebServer) {
