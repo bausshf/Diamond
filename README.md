@@ -25,4 +25,58 @@ Diamond has been made in a way that it's very easy to use and integrate into pro
 # Is there any syntax guide-lines?
 View the wiki under "Comparison" as it compares the syntax with ASP.NET's razor syntax, as well shows the syntax for Diamond.
 
+# Example (Error page that will be used on the Diamond site.)
+
+	@[
+	  layout:
+		layout
+	---
+	  model:
+		HTTPServerErrorInfo
+	---
+	  placeHolders:
+		["title" : "Error - " ~ to!string(model.code)]
+	]
+	<div class="errors fadeIn">
+	  <div class="errorBoxOuter">
+		<div class="errorBoxInner">
+		  <b>Message:</b> @=model.code;
+
+		  @:if (model.message && model.message.length) {
+			&nbsp;- @=model.message;
+		  }
+		</div>
+	  </div>
+
+	  @:if (model.code != 404 && model.code > 299 && model.exception) {
+		<div class="errorBoxOuter spacing-top">
+		  <div class="errorBoxInner">
+			<b>Exception:</b> @=model.exception.toString()
+			  .replace("\r", "")
+			  .replace("\n", "<br>")
+			  .replace(" at ", " at<br>")
+			  .replace(" in ", " in<br>");
+		  </div>
+		</div>
+	  }
+
+	  <div class="errorBoxOuter spacing-top">
+		<div class="errorBoxInner">
+		  <b>Client-Address:</b> @=request.clientAddress;<br>
+		  <b>Full-Url:</b> @=request.fullURL;<br>
+		  <b>Host:</b> @=request.host;<br>
+		  <b>Request-Time:</b> @=request.timeCreated;<br>
+		  <b>Params:</b> @=request.params;<br>
+		  <b>Query:</b> @=request.query;<br>
+		  <b>Query-String:</b> @=request.queryString;<br>
+		  <b>Form-Data:</b> @=request.form;<br>
+		  <b>Json-Data:</b> @=request.json;<br>
+		  <b>Content-Type:</b> @=request.contentType;<br>
+		  <b>Method:</b> @=request.method;<br>
+		  <b>Headers:</b> @=request.headers;
+		</div>
+	  </div>
+	</div>
+
+
 More coming soon ...
