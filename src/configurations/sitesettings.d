@@ -1,14 +1,27 @@
 module diamond.configurations.sitesettings;
 
-version (WebServer) {
+version (WebService) {
+  // N/A
+}
+else {
+  version = Not_WebService;
+}
+
+version (Not_WebService) {
   struct SiteSettings {
-    /// The name of the web site / web server.
-    string name;
+    version (WebServer) {
+      /// The name of the web site / web server.
+      string name;
+    }
+    
     /// Collection of all views
     string[string] views;
-    /// The home route
-    string homeRoute;
-    /// The static file route
-    string staticFileRoute;
+
+    version (WebServer) {
+      /// The home route
+      string homeRoute;
+      /// The static file route
+      string staticFileRoute;
+    }
   }
 }

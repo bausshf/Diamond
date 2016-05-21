@@ -1,6 +1,13 @@
 module diamond.exceptions.viewexception;
 
-version (WebServer) {
+version (WebService) {
+  // N/A
+}
+else {
+  version = Not_WebService;
+}
+
+version (Not_WebService) {
   /// Exception thrown upon encountering an error thrown by a view.
   class ViewException : Exception
   {

@@ -1,48 +1,91 @@
 module diamond.views.viewgeneration;
 
-version (WebServer) {
+version (WebService) {
+  // N/A
+}
+else {
+  version = Not_WebService;
+}
+
+version (Not_WebService) {
   /// Generates all the views into classes.
   mixin template ViewGeneration() {
     auto generateViews() {
       auto routableViewsMixin = "private enum routableViews = [";
       bool hasRoutes = false;
 
-      enum pageClassFormat = q{
-        final class view_%s : View {
-          public:
-          %s
+      version (WebServer) {
+        enum pageClassFormat = q{
+          final class view_%s : View {
+            public:
+            %s
 
-          this(HTTPServerRequest request, HTTPServerResponse response, string name,
-            string[] route = null) {
-            super(request, response, name, route);
+            this(HTTPServerRequest request, HTTPServerResponse response, string name,
+              string[] route = null) {
+              super(request, response, name, route);
+
+              %s
+            }
 
             %s
-          }
 
-          %s
+            override string generate() {
+              import std.array;
+              import std.string;
+              import std.algorithm;
+              import std.conv : to;
+              import vibe.d;
 
-          override string generate() {
-            import std.array;
-            import std.string;
-            import std.algorithm;
-            import std.conv : to;
-            import vibe.d;
+              try {
+                %s
+                %s
 
-            try {
-              %s
-              %s
-
-              %s
-            }
-            catch (HTTPStatusException statusException) {
-              throw statusException;
-            }
-            catch (Throwable t) {
-              throw new ViewException("%s", t);
+                %s
+              }
+              catch (HTTPStatusException statusException) {
+                throw statusException;
+              }
+              catch (Throwable t) {
+                throw new ViewException("%s", t);
+              }
             }
           }
-        }
-      };
+        };
+      }
+      else {
+        enum pageClassFormat = q{
+          final class view_%s : View {
+            public:
+            %s
+
+            this(string name) {
+              super(name);
+
+              %s
+            }
+
+            %s
+
+            override string generate() {
+              import std.array;
+              import std.string;
+              import std.algorithm;
+              import std.conv : to;
+
+              try {
+                %s
+                %s
+
+                %s
+              }
+              catch (Throwable t) {
+                throw new ViewException("%s", t);
+              }
+            }
+          }
+        };
+      }
+
 
       enum placeHolderFormat = q{
         foreach (key,value; %s) {
@@ -124,11 +167,13 @@ version (WebServer) {
                     break;
                   }
 
-                  case "route": {
-                    auto stripped = value.strip().replace("\n", "");
-                    routableViewsMixin ~= format("\"%s\" : \"%s\",", stripped, pageName);
-                    hasRoutes = true;
-                    break;
+                  version (WebServer) {
+                    case "route": {
+                      auto stripped = value.strip().replace("\n", "");
+                      routableViewsMixin ~= format("\"%s\" : \"%s\",", stripped, pageName);
+                      hasRoutes = true;
+                      break;
+                    }
                   }
 
                   case "model": {
@@ -147,24 +192,26 @@ version (WebServer) {
                     break;
                   }
 
-                  case "controller": {
-                    if (value && value.length) {
-                      pageController = q{
-                        auto controllerResult = controller.handle();
+                  version (WebServer) {
+                    case "controller": {
+                      if (value && value.length) {
+                        pageController = q{
+                          auto controllerResult = controller.handle();
 
-                        if (controllerResult == Status.notFound) {
-                          throw new HTTPStatusException(HTTPStatus.NotFound);
-                        }
-                        else if (controllerResult == Status.end) {
-                          return null;
-                        }
-                      };
+                          if (controllerResult == Status.notFound) {
+                            throw new HTTPStatusException(HTTPStatus.NotFound);
+                          }
+                          else if (controllerResult == Status.end) {
+                            return null;
+                          }
+                        };
 
-                      pageMembers ~= format("%s!view_%s controller;\r\n", value, pageName);
-                      pageConstructor ~= format("controller = new %s!view_%s(this);\r\n", value, pageName);
+                        pageMembers ~= format("%s!view_%s controller;\r\n", value, pageName);
+                        pageConstructor ~= format("controller = new %s!view_%s(this);\r\n", value, pageName);
+                      }
+
+                      break;
                     }
-
-                    break;
                   }
 
                   case "layout": {

@@ -35,3 +35,39 @@ version (WebServer) {
     mixin(generateGetView);
   }
 }
+else version (WebService) {
+  // N/A
+}
+else {
+  /// Generates the getView function.
+  mixin template GetView() {
+    auto generateGetView() {
+      string getViewMixin = "
+        View getView(string pageName) {
+          if (!pageName || !pageName.length) {
+            return null;
+          }
+
+          switch (pageName) {
+      ";
+
+      foreach (pageName,pageContent; viewInitCollection) {
+        getViewMixin ~= format(q{
+          case "%s": {
+            return new view_%s("%s");
+          }
+        }, pageName, pageName, pageName);
+      }
+
+      getViewMixin ~= "
+            default: return null;
+          }
+        }
+      ";
+
+      return getViewMixin;
+    }
+
+    mixin(generateGetView);
+  }
+}

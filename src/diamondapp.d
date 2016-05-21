@@ -114,3 +114,36 @@ version (WebServer_Or_WebService) {
     }
   }
 }
+else {
+  import std.json;
+  import std.string : format;
+
+  import diamond.configurations;
+  import diamond.views;
+
+  private enum viewBuildJson = import("view-build.json");
+
+  private string jsonObjectToAA() {
+    auto viewsJson = parseJSON(viewBuildJson)["views"].object;
+
+    string str = "enum string[string] views = [";
+
+    foreach (key,value; viewsJson) {
+      str ~= format("\"%s\" : \"%s\",", key, value.str);
+    }
+
+    str.length -= 1;
+    str ~= "];";
+
+    return str;
+  }
+
+  mixin(jsonObjectToAA);
+
+  // This applies all views and parses them.
+  mixin applyViews!(views);
+
+  shared static this() {
+    // ...
+  }
+}

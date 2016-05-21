@@ -1,6 +1,13 @@
 module diamond.views.viewimports;
 
-version (WebServer) {
+version (WebService) {
+  // N/A
+}
+else {
+  version = Not_WebService;
+}
+
+version (Not_WebService) {
   /// Generates the collection of views and imports their content
   mixin template ViewImports() {
     auto generateViewImports() {

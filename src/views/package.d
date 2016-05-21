@@ -1,18 +1,32 @@
 module diamond.views;
 
-version (WebServer) {
+version (WebService) {
+  // N/A
+}
+else {
+  version = Not_WebService;
+}
+
+version (Not_WebService) {
   /// Mixin template for applying views.
   mixin template applyViews(string[string] views) {
     import std.string : format;
 
-    import vibe.d;
+    version (WebServer) {
+      import vibe.d;
+    }
 
     import diamond.templates;
     import diamond.views.view;
-    import diamond.controllers : Status;
+
     import diamond.exceptions : ViewException;
 
-    import controllers;
+    version (WebServer) {
+      import diamond.controllers : Status;
+
+      import controllers;
+    }
+
     import models;
 
     import diamond.views.viewimports;
