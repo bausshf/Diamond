@@ -79,4 +79,4 @@ View the wiki under "Comparison" as it compares the syntax with ASP.NET's razor 
 	</div>
 
 
-More coming soon ...
+*Please view the wiki for more information.*
