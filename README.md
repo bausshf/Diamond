@@ -17,7 +17,7 @@ It let's you control the markup entirely, can be integrated with any-type of D c
 No. Views are parsed once during compile-time and then compiled into D code that gets executed on run-time; keeping view generation to a minimum, while performance and speed is kept high.
 
 # What are some main features of Diamond?
-Rich and elegant template syntax, natively compiled, views are parsed at compile-time, cross-platform (Will be able to be used on every playform that can compile D -- in some cases vibe.d) and at last it let's you focus on writing the code you need, and not the code you need to get things working.
+Rich and elegant template syntax, natively compiled, views are parsed at compile-time, cross-platform (Will be able to be used on every platform that can compile D -- in some cases vibe.d) and at last it let's you focus on writing the code you need, and not the code you need to get things working.
 
 # Is it easy to use Diamond?
 Diamond has been made in a way that it's very easy to use and integrate into projects. It also takes care of all background setup for vibe.d projects, letting you focus on just writing your websites / webservices logic, rather than a huge hassle of setup.
