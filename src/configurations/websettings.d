@@ -1,4 +1,4 @@
-module diamond.configuration.websettings;
+module diamond.configurations.websettings;
 
 version (WebServer) {
   version = WebServer_Or_WebService;
@@ -8,14 +8,17 @@ else version (WebService) {
 }
 
 version (WebServer_Or_WebService) {
+  import vibe.d;
+
   package(diamond) {
-    WebSettings webSettings;
+    public WebSettings webSettings;
   }
 
   class WebSettings {
     protected:
     this() { }
 
+    public:
     bool onBeforeRequest(HTTPServerRequest request, HTTPServerResponse response) {
       throw new Exception("Must override this ...");
     }
@@ -29,7 +32,6 @@ version (WebServer_Or_WebService) {
     }
 
 
-    public:
     static:
     void initialize(WebSettings settings) {
       webSettings = settings;
