@@ -10,6 +10,8 @@
   https://github.com/bausshf/Diamond/wiki/Using-Diamond-:-Website
 * Guide to contributing
   https://github.com/bausshf/Diamond/wiki/Contributing
+* Tutorial for controllers
+  https://github.com/bausshf/Diamond/wiki/Controller-Tutorial
 
 # What is Diamond?
 Diamond is a MVC / Template framework written in D, originally closed source for a private hobby project. It has now been rewamped to become a fully open-source project.
