@@ -100,7 +100,7 @@ version (Not_WebService) {
         /// Gets the place-holders.
         ref auto placeHolders() { return _placeHolders; }
 
-        version (WebServe) {
+        version (WebServer) {
           /// Gets a boolean determining whether the view is using the default route or not. This is equivalent to route[0].
           auto isDefaultRoute() { return _route.length == 1; }
           /// Gets the action of the view. This is equivalent to route[1].
