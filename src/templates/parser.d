@@ -149,6 +149,12 @@ auto parseTemplate(string content) {
           current = new Part;
           current.currentGrammar = grammars.get('{', null);
           current._content = "}";
+
+          if (afterChar == ';') {
+            current._content ~= ";";
+            i++;
+          }
+
           parts ~= current;
 
           current = new Part;
@@ -161,6 +167,12 @@ auto parseTemplate(string content) {
           current = new Part;
           current.currentGrammar = grammars.get('{', null);
           current._content = "]";
+
+          if (afterChar == ';') {
+            current._content ~= ";";
+            i++;
+          }
+
           parts ~= current;
 
           current = new Part;
@@ -173,6 +185,12 @@ auto parseTemplate(string content) {
           current = new Part;
           current.currentGrammar = grammars.get('{', null);
           current._content = ")";
+
+          if (afterChar == ';') {
+            current._content ~= ";";
+            i++;
+          }
+
           parts ~= current;
 
           current = new Part;
