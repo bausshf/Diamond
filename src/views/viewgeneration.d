@@ -136,6 +136,11 @@ version (Not_WebService) {
                   break;
                 }
 
+                case "expressionEscaped": {
+                  pageMixin ~= escapedFormat.format(part.content);
+                  break;
+                }
+
                 default: {
                   pageMixin ~= appendFormat.format("`" ~ part.content ~ "`");
                   break;

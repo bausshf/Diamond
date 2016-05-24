@@ -20,6 +20,8 @@ final class Grammar {
   immutable(bool) _includeStatementCharacter;
   /// Boolean determining whether the grammar should ignore depth of characters or not.
   immutable(bool) _ignoreDepth;
+  /// A character that must follow the start character.
+  immutable(char) _mandatoryStartCharacter;
 
   public:
   final:
@@ -33,7 +35,7 @@ final class Grammar {
   *   characterIncludeMode =      The character include mode.
   *   includeStatementCharacter = Boolean determining whether the statement character should be included.
   */
-  this(string name, char startCharacter, char endCharacter, ContentMode contentMode, CharacterIncludeMode characterIncludeMode, bool includeStatementCharacter, bool ignoreDepth) {
+  this(string name, char startCharacter, char endCharacter, ContentMode contentMode, CharacterIncludeMode characterIncludeMode, bool includeStatementCharacter, bool ignoreDepth, char mandatoryStartCharacter = '\0') {
     _name = cast(immutable)name;
     _startCharacter = cast(immutable)startCharacter;
     _endCharacter = cast(immutable)endCharacter;
@@ -41,6 +43,7 @@ final class Grammar {
     _characterIncludeMode = characterIncludeMode;
     _includeStatementCharacter = cast(immutable)includeStatementCharacter;
     _ignoreDepth = cast(immutable)ignoreDepth;
+    _mandatoryStartCharacter = cast(immutable)mandatoryStartCharacter;
   }
 
   @property {
@@ -64,5 +67,8 @@ final class Grammar {
 
     /// Gets a boolean determining whether the grammar should ignore depth or not.
     auto ignoreDepth() { return _ignoreDepth; }
+
+    /// Gets a character that must follow the start character. '\0' indicates no character.
+    auto mandatoryStartCharacter() { return _mandatoryStartCharacter; }
   }
 }

@@ -41,6 +41,12 @@ private {
       ContentMode.appendContent, CharacterIncludeMode.none, false, false
     ),
 
+    '$' : new Grammar(
+      "expressionEscaped", '$', ';',
+      ContentMode.appendContent, CharacterIncludeMode.none, false, false,
+      '=' // Character that must follow the first character after @
+    ),
+
     '*' : new Grammar(
       "comment", '*', '*',
       ContentMode.discardContent, CharacterIncludeMode.none, false, true
@@ -67,6 +73,7 @@ auto parseTemplate(string content) {
     auto beforeChar = i > 0 ? content[i - 1] : '\0';
     auto currentChar = content[i];
     auto afterChar = i < (content.length - 1) ? content[i + 1] : '\0';
+    auto beforeSecondaryChar = i > 1 ? content[i - 2] : '\0';
 
     if (currentChar == '@' && !current.currentGrammar) {
       if (current._content && current._content.length && afterChar != '.') {
@@ -103,6 +110,10 @@ auto parseTemplate(string content) {
     }
     else {
       if (current.currentGrammar) {
+        if (current.currentGrammar.mandatoryStartCharacter != '\0' && beforeSecondaryChar == '@' && beforeChar == current.currentGrammar.startCharacter && currentChar == current.currentGrammar.mandatoryStartCharacter) {
+          continue;
+        }
+
         if (currentChar == current.currentGrammar.startCharacter && (!current.currentGrammar.ignoreDepth || !current.isStart())) {
           current.increaseSeekIndex();
 
