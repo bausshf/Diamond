@@ -1,5 +1,7 @@
 # Quick links
 
+* Syntax Reference
+  https://github.com/bausshf/Diamond/wiki/Syntax-Reference
 * Comparison with ASP.NET Razor
   https://github.com/bausshf/Diamond/wiki/Comparison
 * Guide to stand-alone
