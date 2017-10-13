@@ -13,12 +13,13 @@ version (WebServer_Or_WebService) {
   import diamond.controllers.action;
   import diamond.controllers.status;
   import diamond.controllers.basecontroller;
+  import diamond.controllers.mapattributes;
 }
 
 // WebServer's will have a view associated with the controller, the view then contains information about the request etc.
 version (WebServer) {
   /// Wrapper around a controller.
-  class Controller(TView) : BaseController {
+  class Controller(TView,TController) : BaseController {
     private:
     /// The view associatedi with the controller.
     TView _view;
@@ -29,10 +30,20 @@ version (WebServer) {
     * Params:
     *   view =  The view associated with the controller.
     */
-    this(TView view) {
+    this(TView view, TController controller) {
       super();
 
       _view = view;
+
+      import std.traits : hasUDA, getUDAs;
+      import controllers;
+      mixin("import diamondapp : " ~ TController.stringof.split("!")[1][1 .. $-1] ~ ";");
+
+      foreach (member; __traits(derivedMembers, TController)) {
+        mixin("static if (hasUDA!(" ~ TController.stringof ~ "." ~ member ~ ", HttpDefault)) mapDefault(&controller." ~ member ~ ");");
+        mixin("static if (hasUDA!(" ~ TController.stringof ~ "." ~ member ~ ", HttpMandatory)) mapMandatory(&controller." ~ member ~ ");");
+        mixin("static if (hasUDA!(" ~ TController.stringof ~ "." ~ member ~ ", HttpAction)) { static const action_" ~ member ~ " = getUDAs!(" ~ TController.stringof ~ "." ~ member ~ ", HttpAction)[0]; mapAction(action_" ~ member ~ ".method, action_" ~ member ~ ".action && action_" ~ member ~ ".action.length ? action_" ~ member ~ ".action : \"" ~ member ~ "\", &controller." ~ member ~ "); }");
+      }
     }
 
     public:
