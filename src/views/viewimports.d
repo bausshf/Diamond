@@ -11,15 +11,14 @@ version (Not_WebService) {
   /// Generates the collection of views and imports their content
   mixin template ViewImports() {
     auto generateViewImports() {
-      auto viewFormat = "\"%s\" : import(\"%s\"),";
-      auto viewsResult = "private enum viewInitCollection = [";
+      auto viewFormat = "aa[\"%s\"] = import(\"%s\");";
+      auto viewsResult = "private @property auto viewInitCollection() { string[string] aa;";
 
       foreach (pageName,pageContent; views) {
         viewsResult ~= viewFormat.format(pageName,pageContent);
       }
 
-      viewsResult.length -= 1;
-      viewsResult ~= "];";
+      viewsResult ~= "return aa; }";
 
       return viewsResult;
     }

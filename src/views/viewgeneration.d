@@ -11,8 +11,8 @@ version (Not_WebService) {
   /// Generates all the views into classes.
   mixin template ViewGeneration() {
     auto generateViews() {
-      auto routableViewsMixin = "private enum routableViews = [";
-      bool hasRoutes = false;
+      auto routableViewsMixin = "private static __gshared string[string] _routableViews; private @property routableViews() { if (_routableViews && _routableViews.length) return _routableViews; string[string] aa;\r\n";
+    //  bool hasRoutes = false;
 
       version (WebServer) {
         enum pageClassFormat = q{
@@ -175,8 +175,8 @@ version (Not_WebService) {
                   version (WebServer) {
                     case "route": {
                       auto stripped = value.strip().replace("\n", "");
-                      routableViewsMixin ~= format("\"%s\" : \"%s\",", stripped, pageName);
-                      hasRoutes = true;
+                      routableViewsMixin ~= format("aa[\"%s\"] = \"%s\";\r\n", stripped, pageName);
+                      //hasRoutes = true;
                       break;
                     }
                   }
@@ -246,11 +246,11 @@ version (Not_WebService) {
         );
       }
 
-      if (hasRoutes) {
-        routableViewsMixin.length -= 1;
-      }
+      // if (hasRoutes) {
+      //   routableViewsMixin.length -= 1;
+      // }
 
-      routableViewsMixin ~= "];";
+      routableViewsMixin ~= "_routableViews = aa; return _routableViews; }";
       viewMixin ~= routableViewsMixin;
 
       return viewMixin;

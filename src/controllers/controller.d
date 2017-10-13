@@ -67,6 +67,20 @@ version (WebServer) {
     }
 
     /**
+    * Redirects the response to a specific url.
+    * Params:
+    *   url =     The url to redirect to.
+    *   status =  The status of the redirection. (Default is HTTPStatus.Found)
+    * Returns:
+    *   The status required for the redirection to work properly. (Status.end)
+    */
+    Status redirectTo(string url, HTTPStatus status = HTTPStatus.Found) {
+      _view.response.redirect(url, status);
+
+      return Status.end;
+    }
+
+    /**
     * Handles the view's current controller action.
     * Returns:
     *     The status of the controller action.
@@ -178,6 +192,20 @@ else version (WebService) {
     Status jsonString(string s) {
       response.headers["Content-Type"] = "text/json; charset=UTF-8";
       response.bodyWriter.write(s);
+      return Status.end;
+    }
+
+    /**
+    * Redirects the response to a specific url.
+    * Params:
+    *   url =     The url to redirect to.
+    *   status =  The status of the redirection. (Default is HTTPStatus.Found)
+    * Returns:
+    *   The status required for the redirection to work properly. (Status.end)
+    */
+    Status redirectTo(string url, HTTPStatus status = HTTPStatus.Found) {
+      response.redirect(url, status);
+
       return Status.end;
     }
 

@@ -10,48 +10,52 @@ import diamond.templates.characterincludemode;
 import diamond.templates.part;
 
 private {
-  enum grammars = [
-    '[' : new Grammar(
+  // HACK: to make AA's with classes work at compile-time.
+  @property grammars() {
+    Grammar[char] aa;
+    aa['['] = new Grammar(
       "metadata", '[', ']',
       ContentMode.metaContent, CharacterIncludeMode.none, false, false
-    ),
+    );
 
-    '<' : new Grammar(
+    aa['<'] = new Grammar(
       "placeHolder", '<', '>',
       ContentMode.appendContent, CharacterIncludeMode.both, true, false
-    ),
+    );
 
-    '{' : new Grammar(
+    aa['{'] = new Grammar(
       "code", '{', '}',
       ContentMode.mixinContent, CharacterIncludeMode.none, false, false
-    ),
+    );
 
-    ':' : new Grammar(
+    aa[':'] = new Grammar(
       "expression", ':', '\n',
       ContentMode.mixinContent, CharacterIncludeMode.none, false, true
-    ),
+    );
 
-    '=' : new Grammar(
+    aa['='] = new Grammar(
       "expressionValue", '=', ';',
       ContentMode.appendContent, CharacterIncludeMode.none, false, true
-    ),
+    );
 
-    '(' : new Grammar(
+    aa['('] = new Grammar(
       "escapedValue", '(', ')',
       ContentMode.appendContent, CharacterIncludeMode.none, false, false
-    ),
+    );
 
-    '$' : new Grammar(
+    aa['$'] = new Grammar(
       "expressionEscaped", '$', ';',
       ContentMode.appendContent, CharacterIncludeMode.none, false, false,
       '=' // Character that must follow the first character after @
-    ),
+    );
 
-    '*' : new Grammar(
+    aa['*'] = new Grammar(
       "comment", '*', '*',
       ContentMode.discardContent, CharacterIncludeMode.none, false, true
-    )
-  ];
+    );
+
+    return aa;
+  }
 }
 
 /**

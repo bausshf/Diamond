@@ -7,6 +7,8 @@ else {
   version = Not_WebService;
 }
 
+private size_t _pageId;
+
 version (Not_WebService) {
   import std.string : format, strip;
   import std.array : join, replace, split, array;
@@ -41,6 +43,8 @@ version (Not_WebService) {
     string[string] _placeHolders;
     /// The routes
     string[] _result;
+
+    string _rootPath;
 
     protected:
     version (WebServer) {
@@ -112,6 +116,10 @@ version (Not_WebService) {
           * Note: Calling this property might be expensive, so caching the value is recommended.
           */
           auto rootPath() {
+            if (_rootPath) {
+              return _rootPath;
+            }
+
             // This makes sure that it's not retrieving the page's route, but the requests.
             // It's useful in terms of a view redirecting to another view internally.
             // Since the redirected view will have the route of the redirection and not the request.
@@ -152,7 +160,8 @@ version (Not_WebService) {
               layoutResult = layoutResult.replace("@<head>", _placeHolders["head"]);
             }
 
-            result = layoutResult.replace("@<view>", result);
+            _pageId++;
+            result = layoutResult.replace("@<view>", result.replace("@<pageId>", to!string(_pageId)));
           }
         }
 
@@ -246,6 +255,17 @@ version (Not_WebService) {
       * Returns:
       *   The view.
       */
+      auto viewSpecialized(string name)(bool checkRoute = false) {
+        mixin("import diamondapp : getView, view_" ~ name ~ ";"); // To retrieve views ...
+
+        version (WebServer) {
+          mixin("return cast(view_" ~ name ~ ")getView(this.request, this.response, [name], checkRoute);");
+        }
+        else {
+          mixin("return cast(view_" ~ name ~ ")getView(name);");
+        }
+      }
+
       auto view(string name, bool checkRoute = false) {
         import diamondapp : getView; // To retrieve views ...
 
@@ -276,6 +296,100 @@ version (Not_WebService) {
       */
       void render(string name) {
         append(retrieve(name));
+      }
+
+      /**
+      * Will render a layout view of anothr view into this one.
+      * Params:
+      *   name = The name of the layout view.
+      *   id   = The id of the rendered content. This uses the @<id> placeholder.
+      *   placeHolder = The name of the placeholder in the layout view.
+      *   view =  The name of the view.
+      */
+      void render(string name, string id, string placeHolder, string view) {
+        auto layoutView = retrieve(name);
+        layoutView = layoutView.replace("@<id>", id);
+        auto contentView = retrieve(view);
+        layoutView = layoutView.replace("@<" ~ placeHolder ~ ">", contentView);
+
+        append(layoutView);
+      }
+
+      /**
+      * Retrieves the generated html of a view.
+      * This should generally only be used to render partial views into another view.
+      * Params:
+      *   name =  The name of the view to generate the html of.
+      * Returns:
+      *   A string qeuivalent to the generated html.
+      */
+      string retrieve(string name)() {
+        return viewSpecialized!name.generate();
+      }
+
+      /**
+      * Will render another view into this one.
+      * Params:
+      *   name =  The name of the view to render.
+      */
+      void render(string name)() {
+        append(retrieve!name);
+      }
+
+      /**
+      * Will render a layout view of anothr view into this one.
+      * Params:
+      *   name = The name of the layout view.
+      *   id   = The id of the rendered content. This uses the @<id> placeholder.
+      *   placeHolder = The name of the placeholder in the layout view.
+      *   view =  The name of the view.
+      */
+      void render(string name)(string id, string placeHolder, string view) {
+        auto layoutView = retrieve!name;
+        layoutView = layoutView.replace("@<id>", id);
+        auto contentView = retrieve(view);
+        layoutView = layoutView.replace("@<" ~ placeHolder ~ ">", contentView);
+
+        append(layoutView);
+      }
+
+      //
+      /**
+      * Retrieves the generated html of a view.
+      * This should generally only be used to render partial views into another view.
+      * Params:
+      *   name =  The name of the view to generate the html of.
+      * Returns:
+      *   A string qeuivalent to the generated html.
+      */
+      string retrieve(string name, TModel)(TModel model) {
+        return viewSpecialized!name.generate(model);
+      }
+
+      /**
+      * Will render another view into this one.
+      * Params:
+      *   name =  The name of the view to render.
+      */
+      void render(string name, TModel)(TModel model) {
+        append(retrieve!(name, TModel)(model));
+      }
+
+      /**
+      * Will render a layout view of anothr view into this one.
+      * Params:
+      *   name = The name of the layout view.
+      *   id   = The id of the rendered content. This uses the @<id> placeholder.
+      *   placeHolder = The name of the placeholder in the layout view.
+      *   view =  The name of the view.
+      */
+      void render(string view, TModel)(string name, string id, string placeHolder, TModel model) {
+        auto layoutView = retrieve(name);
+        layoutView = layoutView.replace("@<id>", id);
+        auto contentView = retrieve!(view,TModel)(model);
+        layoutView = layoutView.replace("@<" ~ placeHolder ~ ">", contentView);
+
+        append(layoutView);
       }
     }
 

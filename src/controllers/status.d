@@ -8,7 +8,7 @@ enum Status {
     notFound,
     /**
     * Indicates the response should end after executing the actions.
-    * This is useful if you respond with a different type of data than html such as json etc.
+    * This is useful if you're redirecting or responding with a different type of data than html such as json etc.
     */
     end
 }
