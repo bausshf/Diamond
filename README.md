@@ -18,6 +18,8 @@
   https://github.com/bausshf/Diamond/wiki/Controller-Tutorial
 * Specialized view rendering
   https://github.com/bausshf/Diamond/wiki/Specialized-View-Rendering
+* Projects using Diamond
+  https://github.com/bausshf/Diamond/wiki/Projects-Using-Diamond
 
 ## What is Diamond?
 Diamond is a MVC / Template library written in Diamond. It was written originally as an alternative to the Diet templates in vibe.d, but now its functonality and capabilities are far beyond templating only.
